@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pulse — Healthcare Provider Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            background: '#f6f8f9',
+            foreground: '#1a2332',
+            card: '#ffffff',
+            primary: '#0d9488',
+            'primary-foreground': '#f0fdf9',
+            secondary: '#eef6f8',
+            'secondary-foreground': '#2d3a4d',
+            muted: '#f1f5f7',
+            'muted-foreground': '#64748b',
+            accent: '#ccfbf1',
+            'accent-foreground': '#0f3d3e',
+            destructive: '#dc2626',
+            'destructive-foreground': '#ffffff',
+            success: '#22c55e',
+            'success-foreground': '#ffffff',
+            warning: '#f59e0b',
+            'warning-foreground': '#451a03',
+            info: '#3b82f6',
+            'info-foreground': '#ffffff',
+            border: '#e2e8f0',
+            ring: '#0d9488',
+          },
+          borderRadius: {
+            '2xl': '1rem',
+            xl: '0.875rem',
+            lg: '0.75rem',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { border-color: #e2e8f0; }
+    body {
+      background-color: #f6f8f9;
+      color: #1a2332;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      font-feature-settings: "cv11", "ss01";
+    }
+    h1, h2, h3, h4, h5 {
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: -0.02em;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+<div class="flex">
+
+  <!-- Sidebar -->
+  <aside class="sticky top-0 hidden h-screen w-64 shrink-0 border-r border-border bg-white/60 px-4 py-6 lg:flex lg:flex-col" style="background:rgba(255,255,255,0.6);backdrop-filter:blur(8px);">
+    <div class="flex items-center gap-2 px-2">
+      <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm" style="background:#0d9488;color:#f0fdf9;">
+        <i data-lucide="heart" class="h-5 w-5"></i>
+      </div>
+      <div>
+        <p class="font-display text-base font-semibold leading-none">Pulse</p>
+        <p class="mt-1 text-xs text-muted-foreground">Care OS</p>
+      </div>
+    </div>
+
+    <nav class="mt-8 flex flex-1 flex-col gap-1">
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm bg-primary/10 text-primary" style="background:rgba(13,148,136,0.1);color:#0d9488;">
+        <span class="flex items-center gap-3">
+          <i data-lucide="layout-dashboard" class="h-4 w-4"></i> Overview
+        </span>
+      </button>
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <span class="flex items-center gap-3">
+          <i data-lucide="users" class="h-4 w-4"></i> Patients
+        </span>
+      </button>
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <span class="flex items-center gap-3">
+          <i data-lucide="calendar-days" class="h-4 w-4"></i> Appointments
+        </span>
+      </button>
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <span class="flex items-center gap-3">
+          <i data-lucide="file-text" class="h-4 w-4"></i> Records
+        </span>
+      </button>
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <span class="flex items-center gap-3">
+          <i data-lucide="message-square" class="h-4 w-4"></i> Messages
+        </span>
+        <span class="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground" style="background:#0d9488;color:#f0fdf9;">4</span>
+      </button>
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <span class="flex items-center gap-3">
+          <i data-lucide="pill" class="h-4 w-4"></i> Prescriptions
+        </span>
+      </button>
+      <button class="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <span class="flex items-center gap-3">
+          <i data-lucide="trending-up" class="h-4 w-4"></i> Insights
+        </span>
+      </button>
+    </nav>
+
+    <div class="mt-4 space-y-1 border-t border-border pt-4">
+      <button class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <i data-lucide="life-buoy" class="h-4 w-4"></i> Help & support
+      </button>
+      <button class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
+        <i data-lucide="settings" class="h-4 w-4"></i> Settings
+      </button>
+    </div>
+
+    <div class="mt-4 flex items-center gap-3 rounded-xl border border-border bg-background p-3">
+      <div class="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-display text-sm font-semibold text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">
+        EH
+      </div>
+      <div class="min-w-0">
+        <p class="truncate text-sm font-medium">Dr. Elena Hart</p>
+        <p class="truncate text-xs text-muted-foreground">Internal Medicine</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="min-w-0 flex-1">
+    <!-- Topbar -->
+    <header class="sticky top-0 z-10 border-b border-border" style="background:rgba(246,248,249,0.8);backdrop-filter:blur(8px);">
+      <div class="flex items-center gap-4 px-6 py-4">
+        <div>
+          <h1 class="text-xl font-semibold">Good morning, Dr. Hart</h1>
+          <p class="text-xs text-muted-foreground">Wednesday, June 10 · 5 patients waiting · 3 urgent tasks</p>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+          <div class="relative hidden md:block">
+            <i data-lucide="search" class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></i>
+            <input placeholder="Search patients, records, meds…" class="h-10 w-80 rounded-lg border border-border bg-card pl-9 pr-3 text-sm outline-none ring-ring/30 placeholder:text-muted-foreground focus:ring-2" style="--tw-ring-color:rgba(13,148,136,0.3);">
+          </div>
+          <button class="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card hover:bg-muted">
+            <i data-lucide="bell" class="h-4 w-4"></i>
+            <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive" style="background:#dc2626;"></span>
+          </button>
+          <button class="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm hover:opacity-95" style="background:#0d9488;color:#f0fdf9;">
+            <i data-lucide="plus" class="h-4 w-4"></i> New visit
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="space-y-6 p-6">
+      <!-- Stats -->
+      <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Patients today</span>
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg" style="background:rgba(13,148,136,0.1);">
+              <i data-lucide="users" class="h-4 w-4" style="color:#0d9488;"></i>
+            </span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <p class="font-display text-3xl font-semibold">28</p>
+            <span class="text-xs font-medium" style="color:#0d9488;">+12%</span>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Appointments</span>
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg" style="background:rgba(59,130,246,0.15);">
+              <i data-lucide="calendar-days" class="h-4 w-4" style="color:#3b82f6;"></i>
+            </span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <p class="font-display text-3xl font-semibold">14</p>
+            <span class="text-xs font-medium" style="color:#3b82f6;">3 upcoming</span>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Avg. wait time</span>
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg" style="background:rgba(34,197,94,0.15);">
+              <i data-lucide="activity" class="h-4 w-4" style="color:#22c55e;"></i>
+            </span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <p class="font-display text-3xl font-semibold">11m</p>
+            <span class="text-xs font-medium" style="color:#22c55e;">−4m</span>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-md">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground">Pending labs</span>
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg" style="background:rgba(245,158,11,0.2);">
+              <i data-lucide="clipboard-list" class="h-4 w-4" style="color:#451a03;"></i>
+            </span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <p class="font-display text-3xl font-semibold">7</p>
+            <span class="text-xs font-medium" style="color:#451a03;">2 urgent</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main grid -->
+      <section class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <!-- Schedule -->
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm xl:col-span-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-display text-lg font-semibold">Today's schedule</h2>
+              <p class="text-xs text-muted-foreground">14 appointments · 2 telehealth</p>
+            </div>
+            <button class="inline-flex items-center gap-1 text-sm font-medium hover:underline" style="color:#0d9488;">
+              View calendar <i data-lucide="chevron-right" class="h-4 w-4"></i>
+            </button>
+          </div>
+
+          <ul class="mt-5 divide-y divide-border">
+            <li class="flex items-center gap-4 py-3">
+              <div class="w-14 shrink-0 text-right">
+                <p class="font-display text-sm font-semibold">09:00</p>
+              </div>
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">
+                <i data-lucide="stethoscope" class="h-4 w-4"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium">Amelia Carter</p>
+                <p class="truncate text-xs text-muted-foreground">Follow-up · Hypertension</p>
+              </div>
+              <span class="rounded-full px-2.5 py-0.5 text-[11px] font-medium" style="background:rgba(34,197,94,0.15);color:#22c55e;">Checked in</span>
+              <button class="ml-2 hidden rounded-md border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted sm:inline-flex">Open</button>
+            </li>
+            <li class="flex items-center gap-4 py-3">
+              <div class="w-14 shrink-0 text-right">
+                <p class="font-display text-sm font-semibold">09:45</p>
+              </div>
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">
+                <i data-lucide="stethoscope" class="h-4 w-4"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium">Marcus Lee</p>
+                <p class="truncate text-xs text-muted-foreground">Annual physical</p>
+              </div>
+              <span class="rounded-full px-2.5 py-0.5 text-[11px] font-medium" style="background:rgba(245,158,11,0.2);color:#451a03;">Waiting</span>
+              <button class="ml-2 hidden rounded-md border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted sm:inline-flex">Open</button>
+            </li>
+            <li class="flex items-center gap-4 py-3">
+              <div class="w-14 shrink-0 text-right">
+                <p class="font-display text-sm font-semibold">10:30</p>
+              </div>
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">
+                <i data-lucide="video" class="h-4 w-4"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium">Priya Anand</p>
+                <p class="truncate text-xs text-muted-foreground">Telehealth · Dermatology</p>
+              </div>
+              <span class="rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground">Upcoming</span>
+              <button class="ml-2 hidden rounded-md border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted sm:inline-flex">Open</button>
+            </li>
+            <li class="flex items-center gap-4 py-3">
+              <div class="w-14 shrink-0 text-right">
+                <p class="font-display text-sm font-semibold">11:15</p>
+              </div>
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">
+                <i data-lucide="stethoscope" class="h-4 w-4"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium">Jonas Weber</p>
+                <p class="truncate text-xs text-muted-foreground">Lab review</p>
+              </div>
+              <span class="rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground">Upcoming</span>
+              <button class="ml-2 hidden rounded-md border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted sm:inline-flex">Open</button>
+            </li>
+            <li class="flex items-center gap-4 py-3">
+              <div class="w-14 shrink-0 text-right">
+                <p class="font-display text-sm font-semibold">13:00</p>
+              </div>
+              <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">
+                <i data-lucide="video" class="h-4 w-4"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium">Sofia Romero</p>
+                <p class="truncate text-xs text-muted-foreground">Post-op check</p>
+              </div>
+              <span class="rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground">Upcoming</span>
+              <button class="ml-2 hidden rounded-md border border-border px-2.5 py-1.5 text-xs font-medium hover:bg-muted sm:inline-flex">Open</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Messages -->
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-display text-lg font-semibold">Secure messages</h2>
+              <p class="text-xs text-muted-foreground">HIPAA-encrypted</p>
+            </div>
+            <span class="rounded-full px-2 py-0.5 text-xs font-medium" style="background:rgba(13,148,136,0.1);color:#0d9488;">4 new</span>
+          </div>
+          <ul class="mt-4 space-y-3">
+            <li class="flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+              <div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-semibold text-secondary-foreground" style="background:#eef6f8;color:#2d3a4d;">
+                NK
+                <span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-card" style="background:#0d9488;border-color:#fff;"></span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="truncate text-sm font-medium">Dr. Nadia Khan</p>
+                  <span class="shrink-0 text-[11px] text-muted-foreground">2m</span>
+                </div>
+                <p class="truncate text-xs text-muted-foreground">Reviewed Mr. Weber's A1C trend — let's adjust…</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+              <div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-semibold text-secondary-foreground" style="background:#eef6f8;color:#2d3a4d;">
+                AC
+                <span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-card" style="background:#0d9488;border-color:#fff;"></span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="truncate text-sm font-medium">Amelia Carter</p>
+                  <span class="shrink-0 text-[11px] text-muted-foreground">18m</span>
+                </div>
+                <p class="truncate text-xs text-muted-foreground">Thank you, I'll pick up the prescription today.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+              <div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-semibold text-secondary-foreground" style="background:#eef6f8;color:#2d3a4d;">
+                LQ
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="truncate text-sm font-medium">Lab — Quest</p>
+                  <span class="shrink-0 text-[11px] text-muted-foreground">1h</span>
+                </div>
+                <p class="truncate text-xs text-muted-foreground">Results ready for 3 patients.</p>
+              </div>
+            </li>
+            <li class="flex items-start gap-3 rounded-lg p-2 transition-colors hover:bg-muted">
+              <div class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-semibold text-secondary-foreground" style="background:#eef6f8;color:#2d3a4d;">
+                FD
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-2">
+                  <p class="truncate text-sm font-medium">Front desk</p>
+                  <span class="shrink-0 text-[11px] text-muted-foreground">2h</span>
+                </div>
+                <p class="truncate text-xs text-muted-foreground">10:30 telehealth link sent to patient.</p>
+              </div>
+            </li>
+          </ul>
+          <button class="mt-4 w-full rounded-lg border border-border bg-background py-2 text-sm font-medium hover:bg-muted">Open inbox</button>
+        </div>
+      </section>
+
+      <!-- Lower row -->
+      <section class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <!-- Patients -->
+        <div class="rounded-2xl border border-border bg-card p-5 shadow-sm xl:col-span-2">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="font-display text-lg font-semibold">Recent patients</h2>
+              <p class="text-xs text-muted-foreground">Updated 2 minutes ago</p>
+            </div>
+            <button class="inline-flex items-center gap-1 text-sm font-medium hover:underline" style="color:#0d9488;">
+              All patients <i data-lucide="chevron-right" class="h-4 w-4"></i>
+            </button>
+          </div>
+          <div class="mt-4 overflow-hidden rounded-xl border border-border">
+            <table class="w-full text-sm">
+              <thead class="text-xs uppercase tracking-wide text-muted-foreground" style="background:rgba(241,245,247,0.6);">
+                <tr>
+                  <th class="px-4 py-2.5 text-left font-medium">Patient</th>
+                  <th class="px-4 py-2.5 text-left font-medium">ID</th>
+                  <th class="px-4 py-2.5 text-left font-medium">Age</th>
+                  <th class="px-4 py-2.5 text-left font-medium">Primary condition</th>
+                  <th class="px-4 py-2.5 text-left font-medium">Risk</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border">
+                <tr class="hover:bg-muted/40">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent font-display text-xs font-semibold text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">AC</div>
+                      <span class="font-medium">Amelia Carter</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-muted-foreground">PT-10293</td>
+                  <td class="px-4 py-3 text-muted-foreground">54</td>
+                  <td class="px-4 py-3">Hypertension</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium" style="background:rgba(245,158,11,0.2);color:#451a03;"><span class="h-1.5 w-1.5 rounded-full bg-current"></span> Moderate</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-muted/40">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent font-display text-xs font-semibold text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">ML</div>
+                      <span class="font-medium">Marcus Lee</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-muted-foreground">PT-10311</td>
+                  <td class="px-4 py-3 text-muted-foreground">38</td>
+                  <td class="px-4 py-3">Healthy</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium" style="background:rgba(34,197,94,0.15);color:#22c55e;"><span class="h-1.5 w-1.5 rounded-full bg-current"></span> Low</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-muted/40">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent font-display text-xs font-semibold text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">PA</div>
+                      <span class="font-medium">Priya Anand</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-muted-foreground">PT-10330</td>
+                  <td class="px-4 py-3 text-muted-foreground">29</td>
+                  <td class="px-4 py-3">Eczema</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium" style="background:rgba(34,197,94,0.15);color:#22c55e;"><span class="h-1.5 w-1.5 rounded-full bg-current"></span> Low</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-muted/40">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-accent font-display text-xs font-semibold text-accent-foreground" style="background:#ccfbf1;color:#0f3d3e;">JW</div>
+                      <span class="font-medium">Jonas Weber</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-muted-foreground">PT-10342</td>
+                  <td class="px-4 py-3 text-muted-foreground">61</td>
+                  <td class="px-4 py-3">Type 2 Diabetes</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-medium" style="background:rgba(220,38,38,0.15);color:#dc2626;"><span class="h-1.5 w-1.5 rounded-full bg-current"></span> High</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tasks & performance -->
+        <div class="flex flex-col gap-6">
+          <div class="rounded-2xl border border-border bg-card p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display text-lg font-semibold">Tasks</h2>
+              <span class="text-xs text-muted-foreground">4 open</span>
+            </div>
+            <ul class="mt-4 space-y-3">
+              <li class="flex items-center gap-3">
+                <input type="checkbox" class="h-4 w-4 rounded border-border accent-primary" style="accent-color:#0d9488;">
+                <span class="flex-1 text-sm">Sign off on 5 visit notes</span>
+                <span class="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Today</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <input type="checkbox" class="h-4 w-4 rounded border-border accent-primary" style="accent-color:#0d9488;">
+                <span class="flex-1 text-sm">Review imaging for J. Weber</span>
+                <span class="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Today</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <input type="checkbox" class="h-4 w-4 rounded border-border accent-primary" style="accent-color:#0d9488;">
+                <span class="flex-1 text-sm">Refill request — A. Carter</span>
+                <span class="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Tomorrow</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <input type="checkbox" class="h-4 w-4 rounded border-border accent-primary" style="accent-color:#0d9488;">
+                <span class="flex-1 text-sm">Care plan update — S. Romero</span>
+                <span class="rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Fri</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-border p-5 text-white shadow-sm" style="background:linear-gradient(135deg, #0d9488, #0f766e);">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display text-lg font-semibold">Clinical performance</h2>
+              <i data-lucide="trending-up" class="h-4 w-4 opacity-80"></i>
+            </div>
+            <p class="mt-1 text-xs opacity-80">This week</p>
+            <div class="mt-5 grid grid-cols-2 gap-4">
+              <div class="rounded-xl bg-white/10 p-3 backdrop-blur">
+                <p class="font-display text-2xl font-semibold">96%</p>
+                <p class="mt-1 text-[11px] opacity-80">Patient satisfaction</p>
+              </div>
+              <div class="rounded-xl bg-white/10 p-3 backdrop-blur">
+                <p class="font-display text-2xl font-semibold">92%</p>
+                <p class="mt-1 text-[11px] opacity-80">On-time visits</p>
+              </div>
+              <div class="rounded-xl bg-white/10 p-3 backdrop-blur">
+                <p class="font-display text-2xl font-semibold">88%</p>
+                <p class="mt-1 text-[11px] opacity-80">Notes signed &lt; 24h</p>
+              </div>
+              <div class="rounded-xl bg-white/10 p-3 backdrop-blur">
+                <p class="font-display text-2xl font-semibold">2.1%</p>
+                <p class="mt-1 text-[11px] opacity-80">Readmissions</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>
